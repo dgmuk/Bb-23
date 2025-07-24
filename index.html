@@ -1,1 +1,217 @@
-1
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чек-лист «Антисрыв»</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Исправление для Google Sites */
+        html, body {
+            height: auto !important;
+            min-height: 1px !important;
+            overflow: visible !important; 
+        }
+
+        /* Анимация для плавного появления блоков */
+        .fade-in-item {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Стилизация чекбоксов для Шага 1 */
+        .form-checkbox {
+            appearance: none; -webkit-appearance: none;
+            width: 1.5rem; height: 1.5rem;
+            border: 2px solid #4b5563;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s ease-in-out;
+            position: relative;
+        }
+        .form-checkbox:checked {
+            background-color: #ef4444; /* red-500 */
+            border-color: #ef4444;
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+        }
+        
+        /* Стилизация для выбираемых действий в Шаге 2 */
+        .action-item {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid #4b5563;
+        }
+        .action-item.selected {
+            border-color: #2dd4bf; /* teal-400 */
+            background-color: #134e4a; /* teal-900/50 */
+            transform: scale(1.02);
+        }
+        
+        /* Анимация для уведомления */
+        .alert-enter {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .alert-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div id="main-container" class="container mx-auto max-w-3xl p-4 sm:p-8">
+        
+        <!-- Заголовок -->
+        <header class="text-center mb-10 fade-in-item">
+            <h1 class="text-3xl sm:text-4xl font-bold text-white">
+                ✅ Чек-лист «Антисрыв»
+            </h1>
+            <p class="mt-4 text-base text-gray-400 max-w-2xl mx-auto">Цель: распознать момент риска и переключиться до того, как произойдёт срыв.</p>
+        </header>
+        
+        <!-- Вступительный блок -->
+        <div class="bg-gray-800 rounded-2xl p-6 mb-10 text-center fade-in-item" style="animation-delay: 100ms;">
+             <p class="text-lg text-gray-300">📆 Пользуйся каждый день - особенно в моменты, когда чувствуешь тягу «всё бросить» или «заесть стресс».</p>
+        </div>
+
+        <!-- Блоки с шагами -->
+        <main class="space-y-8">
+            
+            <!-- Шаг 1 -->
+            <div class="bg-gray-800 rounded-2xl shadow-lg p-6 fade-in-item" style="animation-delay: 200ms;">
+                <h3 class="font-bold text-2xl text-white mb-4">🔸 Шаг 1. Заметь, что с тобой происходит</h3>
+                <p class="text-gray-300 mb-4">Ответь на 5 быстрых вопросов (в голове или на бумаге):</p>
+                <div id="step1-questions" class="space-y-3">
+                    <label class="flex items-center cursor-pointer"><input type="checkbox" class="form-checkbox mr-4"><span>Я устал?</span></label>
+                    <label class="flex items-center cursor-pointer"><input type="checkbox" class="form-checkbox mr-4"><span>Я раздражён или тревожен?</span></label>
+                    <label class="flex items-center cursor-pointer"><input type="checkbox" class="form-checkbox mr-4"><span>Я давно не ел?</span></label>
+                    <label class="flex items-center cursor-pointer"><input type="checkbox" class="form-checkbox mr-4"><span>У меня было мало сна?</span></label>
+                    <label class="flex items-center cursor-pointer"><input type="checkbox" class="form-checkbox mr-4"><span>Мне хочется не еды, а просто «передышки»?</span></label>
+                </div>
+                <div id="risk-alert" class="mt-4 bg-red-900/30 border-l-4 border-red-500 text-red-200 p-4 rounded-r-lg hidden">
+                    <p class="font-bold">Если 2 или больше ✅ — ты в зоне риска. Переходи к шагу 2.</p>
+                </div>
+            </div>
+
+            <!-- Шаг 2 -->
+            <div class="bg-gray-800 rounded-2xl shadow-lg p-6 fade-in-item" style="animation-delay: 300ms;">
+                <h3 class="font-bold text-2xl text-white mb-4">🔸 Шаг 2. Остановись. Сделай 1 простое действие</h3>
+                <p class="text-gray-300 mb-4">Выбери что-то из этого:</p>
+                <div id="step2-actions" class="space-y-3">
+                    <div class="action-item p-4 rounded-lg flex items-center"><span class="mr-3 text-xl">💧</span> Выпей 1 стакан воды</div>
+                    <div class="action-item p-4 rounded-lg flex items-center"><span class="mr-3 text-xl">😮‍💨</span> Сделай 10 глубоких вдохов</div>
+                    <div class="action-item p-4 rounded-lg flex items-center"><span class="mr-3 text-xl">🚶</span> Пройдись 5 минут по комнате или на улице</div>
+                    <div class="action-item p-4 rounded-lg flex items-center"><span class="mr-3 text-xl">💬</span> Позвони, напиши или проговори эмоцию</div>
+                    <div class="action-item p-4 rounded-lg flex items-center"><span class="mr-3 text-xl">🚿</span> Прими тёплый душ или умойся холодной водой</div>
+                    <div class="action-item p-4 rounded-lg flex items-center"><span class="mr-3 text-xl">⏱️</span> Поставь таймер и отложи еду на 15 минут</div>
+                </div>
+                 <div class="mt-4 bg-gray-700/50 border-l-4 border-teal-500 p-3 rounded-r-lg">
+                    <p class="text-sm text-teal-200"><span class="font-bold">Важно:</span> не запрещай, а откладывай и переключайся.</p>
+                </div>
+            </div>
+
+            <!-- Шаг 3 -->
+            <div class="bg-gray-800 rounded-2xl shadow-lg p-6 fade-in-item" style="animation-delay: 400ms;">
+                <h3 class="font-bold text-2xl text-white mb-4">🔸 Шаг 3. Напомни себе, зачем ты начал</h3>
+                <div class="space-y-3 text-lg italic text-gray-300">
+                    <p class="p-3 rounded-lg hover:bg-gray-700/50 transition-colors">🧠 "Я не слабый. Я учусь жить по-новому."</p>
+                    <p class="p-3 rounded-lg hover:bg-gray-700/50 transition-colors">🧠 "Срыв — это не конец. Я могу вернуться в любой момент."</p>
+                    <p class="p-3 rounded-lg hover:bg-gray-700/50 transition-colors">🧠 "Моё тело заслуживает заботы, а не наказания."</p>
+                </div>
+            </div>
+            
+            <!-- Шаг 4 -->
+            <div class="bg-gray-800 rounded-2xl shadow-lg p-6 fade-in-item" style="animation-delay: 500ms;">
+                <h3 class="font-bold text-2xl text-white mb-4">🔸 Шаг 4. Вернись в ритм</h3>
+                <ul class="space-y-3 list-disc list-inside text-gray-300 text-lg">
+                    <li>Следующая еда — по плану</li>
+                    <li>Следующее движение — по программе</li>
+                    <li>Следующий отчёт — честный и без чувства вины</li>
+                </ul>
+                <div class="mt-4 bg-blue-900/30 border-l-4 border-blue-500 text-blue-200 p-4 rounded-r-lg">
+                    <p class="font-bold text-lg">Ты не обязан быть идеальным. Ты обязан не сдаваться.</p>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Подвал -->
+        <footer class="text-center mt-12 border-t border-gray-700 pt-6">
+            <p class="text-sm text-gray-500">📍 Материал недели 3. Программа Body Balance.</p>
+        </footer>
+
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('main-container');
+            
+            // Логика для Шага 1
+            const questions = document.querySelectorAll('#step1-questions input[type="checkbox"]');
+            const riskAlert = document.getElementById('risk-alert');
+            
+            questions.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    const checkedCount = Array.from(questions).filter(i => i.checked).length;
+                    if (checkedCount >= 2) {
+                        riskAlert.classList.remove('hidden');
+                        riskAlert.classList.add('alert-enter');
+                        setTimeout(() => riskAlert.classList.add('alert-enter-active'), 10);
+                    } else {
+                        riskAlert.classList.add('hidden');
+                        riskAlert.classList.remove('alert-enter', 'alert-enter-active');
+                    }
+                });
+            });
+
+            // Логика для Шага 2
+            const actions = document.querySelectorAll('#step2-actions .action-item');
+            actions.forEach(action => {
+                action.addEventListener('click', () => {
+                    actions.forEach(item => item.classList.remove('selected'));
+                    action.classList.add('selected');
+                });
+            });
+
+            // Исправление высоты для Google Sites
+            if ('ResizeObserver' in window) {
+                const observer = new ResizeObserver(entries => {
+                    if (entries.length > 0) {
+                        const height = entries[0].target.scrollHeight;
+                        document.body.style.height = height + 'px';
+                        document.documentElement.style.height = height + 'px';
+                    }
+                });
+                if (container) {
+                    observer.observe(container);
+                }
+            } else {
+                const resizeFallback = () => {
+                    if(container) document.body.style.height = container.scrollHeight + 'px';
+                };
+                setInterval(resizeFallback, 300);
+                window.addEventListener('resize', resizeFallback);
+                resizeFallback();
+            }
+        });
+    </script>
+</body>
+</html>
